@@ -1,0 +1,30 @@
+[Unit]
+Description=Proxmox MCP server
+After=network-online.target tailscaled.service
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=proxmox-mcp
+Group=proxmox-mcp
+EnvironmentFile=/etc/proxmox-mcp/proxmox-mcp.env
+ExecStart=/opt/proxmox-mcp/.venv/bin/proxmox-mcp
+Restart=on-failure
+RestartSec=5
+
+# Hardening
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=true
+PrivateTmp=true
+PrivateDevices=true
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX
+LockPersonality=true
+RestrictRealtime=true
+ReadWritePaths=
+
+[Install]
+WantedBy=multi-user.target
